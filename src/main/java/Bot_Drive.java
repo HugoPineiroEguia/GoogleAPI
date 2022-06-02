@@ -12,16 +12,22 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
+import discord4j.core.DiscordClient;
+import discord4j.core.GatewayDiscordClient;
+import discord4j.core.event.domain.message.MessageCreateEvent;
+import discord4j.core.object.entity.Message;
+import discord4j.core.object.entity.channel.MessageChannel;
+import discord4j.core.spec.EmbedCreateSpec;
+import discord4j.rest.util.Color;
 
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 
 /* class to demonstarte use of Drive files list API */
-public class DriveQuickstart {
+public class Bot_Drive {
     /** Application name. */
     private static final String APPLICATION_NAME = "Google Drive API Java Quickstart";
     /** Global instance of the JSON factory. */
@@ -47,7 +53,7 @@ public class DriveQuickstart {
      */
     private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
         // Load client secrets.
-        InputStream in = DriveQuickstart.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
+        InputStream in = Bot_Drive.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
         if (in == null) {
             throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
         }
@@ -66,6 +72,44 @@ public class DriveQuickstart {
     }
 
     public static void main(String... args) throws IOException, GeneralSecurityException {
+
+
+
+
+        final String token = "OTUzNjMxMDM5Mjk5OTExNjkx.YjHYHQ.BvNOEjXgAnm_NZ9tW05pvM7G7TE";
+        final DiscordClient client = DiscordClient.create(token);
+        final GatewayDiscordClient gateway = client.login().block();
+
+        EmbedCreateSpec embed = EmbedCreateSpec.builder()
+                .color(Color.GREEN)
+                .title("Nuclear NX-Shadowclaw")
+                .url("https://www.youtube.com/watch?v=dLkNUX-Ovys")
+                .author("TiToPinha", "https://www.youtube.com/channel/UCxgVhB-sNnZ-O27LZAkck9A", "https://i.pinimg.com/564x/2f/ec/a5/2feca5357102b2264947f7aae5f295c5.jpg")
+                .description("Unica nuclear de Espanha y W/r de kills  a ballesta en duelo por equipos ")
+                .thumbnail("https://cdn.pixabay.com/photo/2015/02/23/16/51/radiation-646213_960_720.png")
+                .image("https://callofdutymaps.com/wp-content/uploads/redwoodsnow1.jpg")
+                .timestamp(Instant.now())
+                .footer("footer", "https://i.pinimg.com/564x/2f/ec/a5/2feca5357102b2264947f7aae5f295c5.jpg")
+                .build();
+
+
+        gateway.on(MessageCreateEvent.class).subscribe(event -> {
+            final Message message = event.getMessage();
+            if ("/nuke".equals(message.getContent())) {
+                final MessageChannel channel = message.getChannel().block();
+                channel.createMessage(embed).block();
+            }
+        });
+        gateway.onDisconnect().block();
+
+
+
+
+
+
+
+
+        /*
         // Build a new authorized API client service.
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
@@ -105,8 +149,13 @@ public class DriveQuickstart {
                         .executeMediaAndDownloadTo(outputStream);
                 outputStream.flush();
                 outputStream.close();
+
+
             }
         }
+
+
+         */
     }
 }
 // [END drive_quickstart]
