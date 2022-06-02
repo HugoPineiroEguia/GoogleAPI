@@ -76,7 +76,7 @@ public class Bot_Drive {
 
 
 
-        final String token = "OTUzNjMxMDM5Mjk5OTExNjkx.YjHYHQ.BvNOEjXgAnm_NZ9tW05pvM7G7TE";
+        final String token = "OTUzNjMxMDM5Mjk5OTExNjkx.G_mG97.rx21EVG7kAP_ZFzwE0fUPDM_9ukea-gpFPC95Q";
         final DiscordClient client = DiscordClient.create(token);
         final GatewayDiscordClient gateway = client.login().block();
 
@@ -115,7 +115,6 @@ public class Bot_Drive {
         Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                 .setApplicationName(APPLICATION_NAME)
                 .build();
-
         // Filtra para encontrar la carpeta que se llama imagenesBot
         FileList result = service.files().list()
                 .setQ("name contains 'imagenesBot' and mimeType = 'application/vnd.google-apps.folder'")
@@ -124,7 +123,6 @@ public class Bot_Drive {
                 .setFields("nextPageToken, files(id, name)")
                 .execute();
         List<File> files = result.getFiles();
-
         if (files == null || files.isEmpty()) {
             System.out.println("No files found.");
         } else {
@@ -149,12 +147,8 @@ public class Bot_Drive {
                         .executeMediaAndDownloadTo(outputStream);
                 outputStream.flush();
                 outputStream.close();
-
-
             }
         }
-
-
          */
     }
 }
