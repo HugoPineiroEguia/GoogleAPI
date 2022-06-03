@@ -134,7 +134,7 @@ public class DriveQuickstart {
 
                 OutputStream outputStream = null;
                 try {
-                    outputStream = new FileOutputStream("C:\\Users\\pinha\\Pictures\\Drive\\aux.png");
+                    outputStream = new FileOutputStream("C:\\Users\\pinha\\Pictures\\Drive\\aux2.pdf");
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -161,7 +161,7 @@ public class DriveQuickstart {
 
             InputStream fileAsInputStream = null;
             try {
-                fileAsInputStream = new FileInputStream("C:\\Users\\pinha\\Pictures\\Drive\\aux.png");
+                fileAsInputStream = new FileInputStream("C:\\Users\\pinha\\Pictures\\Drive\\aux2.pdf");
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
