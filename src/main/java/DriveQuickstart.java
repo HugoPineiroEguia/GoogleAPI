@@ -1,3 +1,5 @@
+
+
 import discord4j.core.DiscordClient;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.message.MessageCreateEvent;
@@ -32,7 +34,7 @@ import java.util.List;
 
 
 
-public class Bot_Drive {
+public class DriveQuickstart {
 
 
 
@@ -69,7 +71,7 @@ public class Bot_Drive {
 
     private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
 
-        InputStream in = Bot_Drive.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
+        InputStream in = DriveQuickstart.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
         if (in == null) {
             throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
         }
@@ -99,6 +101,8 @@ public class Bot_Drive {
                 .setApplicationName(APPLICATION_NAME)
                 .build();
 
+
+
         FileList result = service.files().list()
                 .setQ("name contains 'imagenesBot' and mimeType = 'application/vnd.google-apps.folder'")
                 .setPageSize(100)
@@ -118,7 +122,7 @@ public class Bot_Drive {
             }
 
             FileList resultImagenes = service.files().list()
-                    .setQ("name contains 'Manu' and parents in '" + dirImagenes + "'")
+                    .setQ("name contains 'examenCOD' and parents in '" + dirImagenes + "'")
                     .setSpaces("drive")
                     .setFields("nextPageToken, files(id, name)")
                     .execute();
@@ -135,8 +139,8 @@ public class Bot_Drive {
                     e.printStackTrace();
                 }
                 try {
-                    service.files().get(file.getId())
-                            .executeMediaAndDownloadTo(outputStream);
+                    String fileId = "1ZdR3L3qP4Bkq8noWLJHSr_iBau0DNT4Kli4SxNc2YEo";
+                    service.files().export(fileId, "application/pdf").executeMediaAndDownloadTo(outputStream);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -152,6 +156,9 @@ public class Bot_Drive {
                 }
             }
 
+
+
+
             InputStream fileAsInputStream = null;
             try {
                 fileAsInputStream = new FileInputStream("C:\\Users\\pinha\\Pictures\\Drive\\aux.png");
@@ -159,25 +166,19 @@ public class Bot_Drive {
                 e.printStackTrace();
             }
 
-            EmbedCreateSpec embedManu = EmbedCreateSpec.builder()
-                    .color(Color.BLUE)
-                    .title("Imagenes Drive")
-                    .image("attachment:C:\\Users\\pinha\\Pictures\\Drive\\aux.png")
-                    .timestamp(Instant.now())
-                    .build();
 
             InputStream finalFileAsInputStream = fileAsInputStream;
             gateway.on(MessageCreateEvent.class).subscribe(event -> {
                 final Message message = event.getMessage();
-                if ("/Manu".equals(message.getContent())) {
+                if ("/pdf".equals(message.getContent())) {
                     final MessageChannel channel = message.getChannel().block();
-                    channel.createMessage(MessageCreateSpec.builder()
-                            .addFile("aux.png", finalFileAsInputStream)
-                            .addEmbed(embedManu)
-                            .build()).subscribe();
+
+                    channel.createMessage("Archivo descargado").block();
                 }
             });
         }
         gateway.onDisconnect().block();
     }
 }
+
+
