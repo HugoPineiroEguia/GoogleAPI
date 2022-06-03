@@ -101,6 +101,8 @@ public class DriveQuickstart {
                 .setApplicationName(APPLICATION_NAME)
                 .build();
 
+
+
         FileList result = service.files().list()
                 .setQ("name contains 'imagenesBot' and mimeType = 'application/vnd.google-apps.folder'")
                 .setPageSize(100)
@@ -120,7 +122,7 @@ public class DriveQuickstart {
             }
 
             FileList resultImagenes = service.files().list()
-                    .setQ("name contains 'Manu' and parents in '" + dirImagenes + "'")
+                    .setQ("name contains 'examenCOD' and parents in '" + dirImagenes + "'")
                     .setSpaces("drive")
                     .setFields("nextPageToken, files(id, name)")
                     .execute();
@@ -137,8 +139,8 @@ public class DriveQuickstart {
                     e.printStackTrace();
                 }
                 try {
-                    service.files().get(file.getId())
-                            .executeMediaAndDownloadTo(outputStream);
+                    String fileId = "1ZdR3L3qP4Bkq8noWLJHSr_iBau0DNT4Kli4SxNc2YEo";
+                    service.files().export(fileId, "application/pdf").executeMediaAndDownloadTo(outputStream);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -154,6 +156,9 @@ public class DriveQuickstart {
                 }
             }
 
+
+
+
             InputStream fileAsInputStream = null;
             try {
                 fileAsInputStream = new FileInputStream("C:\\Users\\pinha\\Pictures\\Drive\\aux.png");
@@ -161,25 +166,19 @@ public class DriveQuickstart {
                 e.printStackTrace();
             }
 
-            EmbedCreateSpec embedManu = EmbedCreateSpec.builder()
-                    .color(Color.BLUE)
-                    .title("Imagenes Drive")
-                    .image("attachment:C:\\Users\\pinha\\Pictures\\Drive\\aux.png")
-                    .timestamp(Instant.now())
-                    .build();
 
             InputStream finalFileAsInputStream = fileAsInputStream;
             gateway.on(MessageCreateEvent.class).subscribe(event -> {
                 final Message message = event.getMessage();
                 if ("/pdf".equals(message.getContent())) {
                     final MessageChannel channel = message.getChannel().block();
-                    channel.createMessage(MessageCreateSpec.builder()
-                            .addFile("aux.png", finalFileAsInputStream)
-                            .addEmbed(embedManu)
-                            .build()).subscribe();
+
+                    channel.createMessage("Archivo descargado").block();
                 }
             });
         }
         gateway.onDisconnect().block();
     }
 }
+
+
